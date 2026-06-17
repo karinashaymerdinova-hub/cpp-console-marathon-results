@@ -21,13 +21,13 @@ struct MarathonRecord {
 };
 
 // Время забега в секундах
-int getRaceTimeSec(const MarathonRecord* r) {
+inline int getRaceTimeSec(const MarathonRecord* r) {
     int s = r->start.hours * 3600 + r->start.minutes * 60 + r->start.seconds;
     int f = r->finish.hours * 3600 + r->finish.minutes * 60 + r->finish.seconds;
     return f - s;
 }
 
-void printHeader() {
+inline void printHeader() {
     cout << left
         << setw(4) << "№"
         << setw(14) << "Фамилия"
@@ -41,7 +41,7 @@ void printHeader() {
     cout << endl;
 }
 
-void printRecord(const MarathonRecord* r) {
+inline void printRecord(const MarathonRecord* r) {
     int t = getRaceTimeSec(r);
     char timeStr[20], startStr[20], finishStr[20];
     // Форматируем время через строки (без printf/scanf из консоли)
