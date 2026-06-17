@@ -1,5 +1,6 @@
 #include <iostream>
 #include "file_reader.h"
+#include "filter.h"
 using namespace std;
 
 int main() {
@@ -10,15 +11,45 @@ int main() {
     cout << "Ãðóïïà: 25ÈÑèÒ" << endl << endl;
 
     MarathonRecord records[MAX_RECORDS];
+    MarathonRecord* result[MAX_RECORDS];
     int count = readData("data.txt", records);
 
     if (count == 0) {
         cout << "Îøèáêà: äàííûå íå çàãðóæåíû!" << endl;
         return 1;
     }
-    cout << "Çàãðóæåíî çàïèñåé: " << count << endl << endl;
-    printHeader();
-    for (int i = 0; i < count; i++)
-        printRecord(&records[i]);
+    cout << "Çàãðóæåíî çàïèñåé: " << count << endl;
+
+    int choice = -1;
+    while (choice != 0) {
+        cout << "\n=== ÌÅÍÞ ===" << endl;
+        cout << "1. Ïîêàçàòü âñåõ ó÷àñòíèêîâ" << endl;
+        cout << "2. Ôèëüòð: ó÷àñòíèêè êëóáà \"Ñïàðòàê\"" << endl;
+        cout << "3. Ôèëüòð: ðåçóëüòàò ëó÷øå 2:50:00" << endl;
+        cout << "0. Âûõîä" << endl;
+        cout << "Âûáîð: ";
+        cin >> choice;
+
+        if (choice == 1) {
+            cout << "\n=== ÂÑÅ Ó×ÀÑÒÍÈÊÈ ===" << endl;
+            printHeader();
+            for (int i = 0; i < count; i++)
+                printRecord(&records[i]);
+        }
+        else if (choice == 2) {
+            int n = filter(records, count, result, isSpartak);
+            cout << "\n=== Ó×ÀÑÒÍÈÊÈ ÊËÓÁÀ ÑÏÀÐÒÀÊ ===" << endl;
+            cout << "Íàéäåíî: " << n << endl;
+            printHeader();
+            for (int i = 0; i < n; i++) printRecord(result[i]);
+        }
+        else if (choice == 3) {
+            int n = filter(records, count, result, isFastEnough);
+            cout << "\n=== ÐÅÇÓËÜÒÀÒ ËÓ×ØÅ 2:50:00 ===" << endl;
+            cout << "Íàéäåíî: " << n << endl;
+            printHeader();
+            for (int i = 0; i < n; i++) printRecord(result[i]);
+        }
+    }
     return 0;
 }
