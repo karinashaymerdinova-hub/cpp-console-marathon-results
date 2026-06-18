@@ -1,7 +1,9 @@
 #include <iostream>
+#include "processing.h"
 #include "file_reader.h"
 #include "filter.h"
 #include "sort.h"
+
 using namespace std;
 
 int main() {
@@ -20,6 +22,7 @@ int main() {
         return 1;
     }
     cout << "Загружено записей: " << count << endl;
+
     int choice = -1;
     while (choice != 0) {
         cout << "\n=== МЕНЮ ===" << endl;
@@ -27,6 +30,7 @@ int main() {
         cout << "2. Фильтр: участники клуба \"Спартак\"" << endl;
         cout << "3. Фильтр: результат лучше 2:50:00" << endl;
         cout << "4. Сортировка" << endl;
+        cout << "5. Лучшее время марафона" << endl;
         cout << "0. Выход" << endl;
         cout << "Выбор: ";
         cin >> choice;
@@ -52,6 +56,7 @@ int main() {
             // Массив указателей для сортировки
             MarathonRecord* sorted[MAX_RECORDS];
             for (int i = 0; i < count; i++) sorted[i] = &records[i];
+
             SortFunc sortMethods[] = { bubbleSort, quickSort };
             cout << "\nМетод сортировки:" << endl;
             cout << "1. Пузырьком (Bubble sort)" << endl;
@@ -73,6 +78,26 @@ int main() {
             cout << "\n=== РЕЗУЛЬТАТЫ СОРТИРОВКИ ===" << endl;
             printHeader();
             for (int i = 0; i < count; i++) printRecord(sorted[i]);
+        }
+        // Внедренный блок обработки выбора 5 (Лучшее время)
+        else if (choice == 5) {
+            int best = process(records, count);
+            if (best == -1) {
+                cout << "Нет данных." << endl;
+            }
+            else {
+                int h = best / 3600;
+                int m = (best % 3600) / 60;
+                int s = best % 60;
+
+                // Форматируем чч:мм:сс без printf
+                char res[20];
+                res[0] = '0' + h / 10; res[1] = '0' + h % 10; res[2] = ':';
+                res[3] = '0' + m / 10; res[4] = '0' + m % 10; res[5] = ':';
+                res[6] = '0' + s / 10; res[7] = '0' + s % 10; res[8] = '\0';
+
+                cout << "\nЛучшее время марафона: " << res << endl;
+            }
         }
     }
     return 0;
